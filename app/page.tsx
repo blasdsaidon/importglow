@@ -410,6 +410,17 @@ export default function Home() {
         <small>Venta de productos con nicotina exclusiva para mayores de 18 años.</small>
       </footer>
 
+      <a
+        className="floating-whatsapp"
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hola ImportGlow, quería hacer una consulta.")}`}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Consultar directamente por WhatsApp"
+      >
+        <em>¿Te ayudamos?</em>
+        <span aria-hidden="true">✆</span>
+      </a>
+
       {hasOverlay && <button className="page-overlay" aria-label="Cerrar" onClick={() => { setMenuOpen(false); setCartOpen(false); setCheckoutOpen(false); setSelectedProduct(null); }} />}
 
       <aside className={`side-panel menu-panel ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>

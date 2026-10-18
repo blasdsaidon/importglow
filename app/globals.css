@@ -210,6 +210,47 @@ footer p { margin: 0; }
 footer > a:not(.brand) { color: var(--paper); font-weight: 800; }
 footer small { grid-column: 1 / -1; padding-top: 25px; border-top: 1px solid #1c242b; font-size: 11px; }
 
+.floating-whatsapp {
+  position: fixed;
+  z-index: 18;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.42));
+}
+.floating-whatsapp em {
+  padding: 10px 13px;
+  border: 1px solid #2d3a43;
+  border-radius: 9px;
+  background: rgba(13,17,21,.94);
+  color: var(--paper);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: opacity .2s, transform .2s;
+}
+.floating-whatsapp span {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,.85);
+  border-radius: 50% 50% 50% 14px;
+  background: #25d366;
+  color: white;
+  font-size: 31px;
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  transform: rotate(-5deg);
+  transition: transform .2s, background .2s;
+}
+.floating-whatsapp:hover em { opacity: 1; transform: translateX(0); }
+.floating-whatsapp:hover span { transform: rotate(0) scale(1.06); background: #35e477; }
+
 .page-overlay { position: fixed; inset: 0; border: 0; padding: 0; background: rgba(0,0,0,.72); backdrop-filter: blur(5px); z-index: 30; cursor: default; }
 .side-panel { position: fixed; z-index: 40; top: 0; bottom: 0; width: min(470px, 100%); padding: 32px; background: #0a0d10; border-color: var(--line); border-style: solid; transition: transform .28s ease; display: flex; flex-direction: column; }
 .menu-panel { left: 0; border-width: 0 1px 0 0; transform: translateX(-102%); }
@@ -329,6 +370,9 @@ footer small { grid-column: 1 / -1; padding-top: 25px; border-top: 1px solid #1c
   .how-grid > div, .how-grid > div:not(:first-child) { padding: 28px 0; border-right: 0; border-bottom: 1px solid #c8c4ba; min-height: auto; }
   footer { grid-template-columns: 1fr auto; padding: 45px 22px; }
   footer p { grid-column: 1 / -1; }
+  .floating-whatsapp { right: 16px; bottom: 18px; }
+  .floating-whatsapp em { display: none; }
+  .floating-whatsapp span { width: 54px; height: 54px; font-size: 29px; }
   .side-panel { padding: 24px 18px; }
   .cart-item { align-items: flex-start; flex-direction: column; }
   .quantity-control { align-self: stretch; }

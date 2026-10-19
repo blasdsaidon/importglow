@@ -168,6 +168,8 @@ body::before {
 .product-card-footer button { border: 1px solid var(--blue-dark); background: var(--blue); color: #07101a; width: 44px; height: 44px; border-radius: 9px; font-size: 26px; font-weight: 500; cursor: pointer; }
 
 .product-art { width: 100%; height: 100%; position: relative; display: grid; place-items: center; overflow: hidden; }
+.product-photo { width: 100%; height: 100%; background: #f4f2ed; }
+.product-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .product-art::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 35%, var(--art-a), transparent 48%), linear-gradient(145deg, #101419, #07090b); opacity: .95; }
 .product-art::after { content: "IMPORTGLOW"; position: absolute; font-family: Impact, sans-serif; font-size: clamp(42px, 6vw, 78px); letter-spacing: .06em; color: rgba(255,255,255,.025); transform: rotate(-12deg); }
 .vape-blue { --art-a: rgba(84,145,207,.42); --device-a: #9ac5ef; --device-b: #346d9f; }

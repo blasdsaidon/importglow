@@ -132,6 +132,25 @@ const currency = new Intl.NumberFormat("es-AR", {
   maximumFractionDigits: 0,
 });
 
+function CartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M3 4h2.1l1.9 9.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L20 8H6" />
+      <circle cx="9.5" cy="19" r="1.25" />
+      <circle cx="17" cy="19" r="1.25" />
+    </svg>
+  );
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20.6 11.7a8.6 8.6 0 0 1-12.8 7.5L3 20.7l1.5-4.6a8.6 8.6 0 1 1 16.1-4.4Z" />
+      <path d="M8.1 7.5c.2-.4.5-.4.8-.4h.5c.2 0 .4.1.5.5l.7 1.8c.1.3.1.5-.1.7l-.7.8c-.2.2-.1.4 0 .6.8 1.4 1.9 2.4 3.3 3.1.2.1.4.1.6-.1l.9-1.1c.2-.2.4-.3.7-.1l1.9.9c.3.1.5.3.5.5 0 .3-.1 1.4-.8 2-.6.6-1.5.9-2.4.7-1.3-.3-2.9-1-4.7-2.6-2.2-2-3.4-4.4-3.3-5.6 0-.7.3-1.3.6-1.7Z" />
+    </svg>
+  );
+}
+
 function ProductArt({ product }: { product: Product }) {
   const isVape = product.category === "Vapers";
 
@@ -305,6 +324,31 @@ export default function Storefront({ products = sampleProducts }: { products?: P
 
   const hasOverlay = menuOpen || cartOpen || checkoutOpen || Boolean(selectedProduct);
 
+  useEffect(() => {
+    if (!hasOverlay) return;
+
+    const scrollY = window.scrollY;
+    const previous = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+    };
+
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+
+    return () => {
+      document.body.style.overflow = previous.overflow;
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.width = previous.width;
+      window.scrollTo(0, scrollY);
+    };
+  }, [hasOverlay]);
+
   return (
     <main>
       <header className="site-header">
@@ -326,7 +370,7 @@ export default function Storefront({ products = sampleProducts }: { products?: P
           />
         </label>
         <button className="cart-button" onClick={() => setCartOpen(true)} aria-label={`Abrir carrito, ${totalItems} productos`}>
-          <span aria-hidden="true">▱</span>
+          <CartIcon />
           <b>{totalItems}</b>
         </button>
       </header>
@@ -442,7 +486,7 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         aria-label="Consultar directamente por WhatsApp"
       >
         <em>¿Te ayudamos?</em>
-        <span aria-hidden="true">✆</span>
+        <span><WhatsAppIcon /></span>
       </a>
 
       {hasOverlay && <button className="page-overlay" aria-label="Cerrar" onClick={() => { setMenuOpen(false); setCartOpen(false); setCheckoutOpen(false); setSelectedProduct(null); }} />}

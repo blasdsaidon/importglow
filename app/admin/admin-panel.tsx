@@ -1,7 +1,6 @@
 "use client";
 
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import type { Product } from "@/lib/catalog";
 
 function emptyProduct(): Product {
@@ -121,10 +120,10 @@ export default function AdminPanel({ displayName, signOutPath }: { displayName: 
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <Link className="admin-brand" href="/">IMPORT<strong>GLOW</strong></Link>
+        <a className="admin-brand" href="/">IMPORT<strong>GLOW</strong></a>
         <div>
           <span>Hola, {displayName}</span>
-          <Link href="/" target="_blank">Ver tienda ↗</Link>
+          <a href="/" target="_blank">Ver tienda ↗</a>
           <a href={signOutPath}>Salir</a>
         </div>
       </header>

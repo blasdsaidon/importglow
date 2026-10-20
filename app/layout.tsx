@@ -13,6 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: origin,
     title: "ImportGlow | Perfumes y vapers importados",
     description: "Explorá perfumes y vapers importados, elegí tu variante y armá tu pedido directo por WhatsApp.",
+    icons: {
+      icon: [{ url: "/importglow-logo.jpeg", type: "image/jpeg" }],
+      shortcut: "/importglow-logo.jpeg",
+      apple: "/importglow-logo.jpeg",
+    },
     openGraph: {
       title: "ImportGlow | Perfumes y vapers importados",
       description: "Tu próxima obsesión está acá. Elegí tu variante y pedí directo por WhatsApp.",

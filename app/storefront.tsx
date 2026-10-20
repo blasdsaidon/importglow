@@ -145,8 +145,8 @@ function CartIcon() {
 function WhatsAppIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M20.6 11.7a8.6 8.6 0 0 1-12.8 7.5L3 20.7l1.5-4.6a8.6 8.6 0 1 1 16.1-4.4Z" />
-      <path d="M8.1 7.5c.2-.4.5-.4.8-.4h.5c.2 0 .4.1.5.5l.7 1.8c.1.3.1.5-.1.7l-.7.8c-.2.2-.1.4 0 .6.8 1.4 1.9 2.4 3.3 3.1.2.1.4.1.6-.1l.9-1.1c.2-.2.4-.3.7-.1l1.9.9c.3.1.5.3.5.5 0 .3-.1 1.4-.8 2-.6.6-1.5.9-2.4.7-1.3-.3-2.9-1-4.7-2.6-2.2-2-3.4-4.4-3.3-5.6 0-.7.3-1.3.6-1.7Z" />
+      <path className="whatsapp-bubble" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z" />
+      <path className="whatsapp-handset" d="M8.1 7.5c.2-.4.5-.4.8-.4h.5c.2 0 .4.1.5.5l.7 1.8c.1.3.1.5-.1.7l-.7.8c-.2.2-.1.4 0 .6.8 1.4 1.9 2.4 3.3 3.1.2.1.4.1.6-.1l.9-1.1c.2-.2.4-.3.7-.1l1.9.9c.3.1.5.3.5.5 0 .3-.1 1.4-.8 2-.6.6-1.5.9-2.4.7-1.3-.3-2.9-1-4.7-2.6-2.2-2-3.4-4.4-3.3-5.6 0-.7.3-1.3.6-1.7Z" />
     </svg>
   );
 }
@@ -352,14 +352,14 @@ export default function Storefront({ products = sampleProducts }: { products?: P
   return (
     <main>
       <header className="site-header">
+        <a className="header-brand" href="#inicio" aria-label="ImportGlow, inicio">
+          <img src="/importglow-logo.jpeg" alt="" />
+          <span><strong>IMPORTGLOW</strong><small>Catálogo online</small></span>
+        </a>
         <button className="icon-button menu-button" onClick={() => setMenuOpen(true)} aria-label="Abrir categorías">
           <span />
           <span />
         </button>
-        <a className="brand" href="#inicio" aria-label="ImportGlow, inicio">
-          <span>IMPORT</span>
-          <strong>GLOW</strong>
-        </a>
         <label className="search-box">
           <span aria-hidden="true">⌕</span>
           <input
@@ -375,58 +375,39 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         </button>
       </header>
 
-      <section className="hero" id="inicio">
-        <div className="hero-copy">
-          <p className="kicker">IMPORTADOS · SELECCIÓN PREMIUM</p>
-          <h1>
-            Encontrá tu próxima
-            <span>obsesión.</span>
-          </h1>
-          <p className="hero-text">
-            Perfumes que dejan huella y vapers con sabores que se sienten. Elegí tu variante y pedí directo por WhatsApp.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-button" href="#catalogo">Explorar catálogo <span>↘</span></a>
-            <a className="text-link" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer">Hablar con nosotros ↗</a>
-          </div>
-          <div className="trust-row">
-            <span><b>01</b> Productos seleccionados</span>
-            <span><b>02</b> Atención personalizada</span>
-            <span><b>03</b> Compra simple</span>
-          </div>
-        </div>
-        <div className="hero-visual" aria-hidden="true">
-          <span className="orbit orbit-one" />
-          <span className="orbit orbit-two" />
-          <div className="hero-word">GLOW</div>
-          <div className="hero-vape"><i>50K</i><strong>RABBEATS</strong></div>
-          <div className="hero-perfume"><i /><strong>NOIR</strong><small>EAU DE PARFUM</small></div>
-          <p>PERFUMES <span>×</span> VAPERS</p>
+      <nav className="category-strip" role="tablist" aria-label="Categorías">
+        {(["Todos", "Vapers", "Perfumes"] as const).map((item) => (
+          <button
+            key={item}
+            className={category === item ? "active" : ""}
+            onClick={() => {
+              setCategory(item);
+              document.getElementById(item === "Todos" ? "inicio" : "catalogo")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            role="tab"
+            aria-selected={category === item}
+          >
+            {item === "Todos" ? "Inicio" : item}
+            <span>{item === "Todos" ? products.length : products.filter((product) => product.category === item).length}</span>
+          </button>
+        ))}
+      </nav>
+
+      <section className="promo-section" id="inicio">
+        <div className="promo-banner">
+          <p className="kicker">DESTACADOS</p>
+          <h1>Elegidos para vos.</h1>
+          <a href="#catalogo">Ver catálogo <span>→</span></a>
         </div>
       </section>
 
       <section className="catalog-section" id="catalogo">
         <div className="section-heading">
           <div>
-            <p className="kicker">CATÁLOGO</p>
-            <h2>Elegidos para vos</h2>
+            <p className="kicker">NOVEDADES</p>
+            <h2>{category === "Todos" ? "Nuevos ingresos" : category}</h2>
           </div>
-          <p>Precios y disponibilidad actualizados. Seleccioná cada producto para ver sus variantes.</p>
-        </div>
-
-        <div className="category-tabs" role="tablist" aria-label="Categorías">
-          {(["Todos", "Vapers", "Perfumes"] as const).map((item) => (
-            <button
-              key={item}
-              className={category === item ? "active" : ""}
-              onClick={() => setCategory(item)}
-              role="tab"
-              aria-selected={category === item}
-            >
-              {item}
-              <span>{item === "Todos" ? products.length : products.filter((product) => product.category === item).length}</span>
-            </button>
-          ))}
+          <button onClick={() => { setCategory("Todos"); setQuery(""); }}>Ver todos</button>
         </div>
 
         {filteredProducts.length ? (
@@ -462,13 +443,9 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         )}
       </section>
 
-      <section className="how-section">
-        <p className="kicker">ASÍ DE SIMPLE</p>
-        <div className="how-grid">
-          <div><b>1</b><strong>Elegí</strong><p>Explorá productos y seleccioná tu sabor o tamaño.</p></div>
-          <div><b>2</b><strong>Armá</strong><p>Sumá al carrito y completá tus datos de entrega.</p></div>
-          <div><b>3</b><strong>Confirmá</strong><p>Enviá el pedido por WhatsApp y coordinamos todo.</p></div>
-        </div>
+      <section className="catalog-cta">
+        <div><p className="kicker">ATENCIÓN PERSONALIZADA</p><h2>¿Necesitás ayuda para elegir?</h2><span>Te asesoramos y armamos el pedido con vos.</span></div>
+        <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer">Consultar por WhatsApp <span>→</span></a>
       </section>
 
       <footer>
@@ -485,8 +462,8 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         rel="noreferrer"
         aria-label="Consultar directamente por WhatsApp"
       >
-        <em>¿Te ayudamos?</em>
         <span><WhatsAppIcon /></span>
+        <strong>WhatsApp</strong>
       </a>
 
       {hasOverlay && <button className="page-overlay" aria-label="Cerrar" onClick={() => { setMenuOpen(false); setCartOpen(false); setCheckoutOpen(false); setSelectedProduct(null); }} />}

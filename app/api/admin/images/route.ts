@@ -1,10 +1,6 @@
-import { env } from "cloudflare:workers";
 import { NextResponse } from "next/server";
 import { isAdminRequest } from "@/lib/admin-auth";
-
-type UploadBucket = {
-  put(key: string, value: ArrayBuffer, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
-};
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   if (!(await isAdminRequest())) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
@@ -22,18 +18,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "La imagen no puede superar 8 MB." }, { status: 400 });
   }
 
-  const bucket = (env as unknown as { BUCKET?: UploadBucket }).BUCKET;
-  if (!bucket) return NextResponse.json({ error: "El almacenamiento de imágenes no está disponible." }, { status: 503 });
-
   const extension = file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "").toLowerCase() || "jpg";
   const objectKey = `products/${productId}/${crypto.randomUUID()}.${extension}`;
-  await bucket.put(objectKey, await file.arrayBuffer(), { httpMetadata: { contentType: file.type } });
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.storage.from("product-images")
+    .upload(objectKey, file, { contentType: file.type, upsert: false });
+  if (error) return NextResponse.json({ error: `No se pudo subir la imagen: ${error.message}` }, { status: 500 });
+  const publicUrl = supabase.storage.from("product-images").getPublicUrl(objectKey).data.publicUrl;
 
   return NextResponse.json({
     image: {
       id: crypto.randomUUID(),
       objectKey,
-      url: `/api/media/${objectKey.split("/").map(encodeURIComponent).join("/")}`,
+      url: publicUrl,
       alt: "",
     },
   });

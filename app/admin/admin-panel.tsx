@@ -1,9 +1,8 @@
 "use client";
 
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import type { Product } from "@/lib/catalog";
-
-const currency = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 });
 
 function emptyProduct(): Product {
   return {
@@ -122,10 +121,10 @@ export default function AdminPanel({ displayName, signOutPath }: { displayName: 
   return (
     <main className="admin-shell">
       <header className="admin-header">
-        <a className="admin-brand" href="/">IMPORT<strong>GLOW</strong></a>
+        <Link className="admin-brand" href="/">IMPORT<strong>GLOW</strong></Link>
         <div>
           <span>Hola, {displayName}</span>
-          <a href="/" target="_blank">Ver tienda ↗</a>
+          <Link href="/" target="_blank">Ver tienda ↗</Link>
           <a href={signOutPath}>Salir</a>
         </div>
       </header>

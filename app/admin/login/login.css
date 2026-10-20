@@ -1,0 +1,19 @@
+.login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; color: #eef1f4; background: radial-gradient(circle at 85% 10%, #18324a 0, #0b1117 38%, #070a0d 75%); font-family: Arial, Helvetica, sans-serif; }
+.login-card { width: min(100%, 460px); padding: 34px; border: 1px solid #26323c; border-radius: 18px; background: rgba(12,17,22,.94); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+.login-brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.login-brand img { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; }
+.login-brand span { display: grid; gap: 3px; color: #88939c; font-size: 12px; }
+.login-brand strong { color: white; font-size: 15px; letter-spacing: .08em; }
+.login-copy { margin: 42px 0 26px; }
+.login-copy p { margin: 0 0 10px; color: #6ca5dc; font-size: 11px; font-weight: 900; letter-spacing: .16em; }
+.login-copy h1 { margin: 0 0 12px; font-size: clamp(30px, 7vw, 42px); line-height: 1; letter-spacing: -.045em; }
+.login-copy span { color: #9ca6ad; line-height: 1.5; }
+.login-form { display: grid; gap: 16px; }
+.login-form label { display: grid; gap: 8px; color: #d7dde1; font-size: 13px; font-weight: 800; }
+.login-form input { width: 100%; padding: 14px; color: white; background: #111920; border: 1px solid #33414c; border-radius: 9px; font: inherit; outline: none; }
+.login-form input:focus { border-color: #6ca5dc; box-shadow: 0 0 0 3px rgba(108,165,220,.13); }
+.login-form button { margin-top: 5px; padding: 15px; border: 0; border-radius: 9px; background: #6ca5dc; color: #071019; font: inherit; font-weight: 900; cursor: pointer; }
+.login-form button:disabled { opacity: .6; cursor: wait; }
+.login-error { margin: 0; padding: 12px; border: 1px solid #693a41; border-radius: 8px; color: #ffb6bf; background: #2c171b; font-size: 13px; }
+.login-back { display: block; margin-top: 24px; color: #9ca6ad; text-align: center; text-decoration: none; font-size: 13px; }
+@media (max-width: 520px) { .login-page { padding: 0; align-items: stretch; } .login-card { min-height: 100vh; padding: 26px 20px; border: 0; border-radius: 0; } }

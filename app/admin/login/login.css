@@ -15,5 +15,6 @@
 .login-form button { margin-top: 5px; padding: 15px; border: 0; border-radius: 9px; background: #6ca5dc; color: #071019; font: inherit; font-weight: 900; cursor: pointer; }
 .login-form button:disabled { opacity: .6; cursor: wait; }
 .login-error { margin: 0; padding: 12px; border: 1px solid #693a41; border-radius: 8px; color: #ffb6bf; background: #2c171b; font-size: 13px; }
+.login-status { margin: 0; color: #9ca6ad; text-align: center; }
 .login-back { display: block; margin-top: 24px; color: #9ca6ad; text-align: center; text-decoration: none; font-size: 13px; }
 @media (max-width: 520px) { .login-page { padding: 0; align-items: stretch; } .login-card { min-height: 100vh; padding: 26px 20px; border: 0; border-radius: 0; } }

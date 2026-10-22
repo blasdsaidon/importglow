@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Variant = {
   id: string;
@@ -192,12 +192,10 @@ export default function Storefront({ products = sampleProducts }: { products?: P
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedVariant, setSelectedVariant] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartReady, setCartReady] = useState(false);
-  const [delivery, setDelivery] = useState("Retiro coordinado");
 
   useEffect(() => {
     try {
@@ -278,51 +276,37 @@ export default function Storefront({ products = sampleProducts }: { products?: P
     );
   }
 
-  function beginCheckout() {
-    if (!cart.length) return;
-    setCartOpen(false);
-    setCheckoutOpen(true);
-  }
-
-  function submitOrder(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "");
-    const customerWhatsapp = String(form.get("whatsapp") || "");
-    const email = String(form.get("email") || "");
-    const payment = String(form.get("payment") || "");
-    const address = String(form.get("address") || "");
-    const city = String(form.get("city") || "");
-    const notes = String(form.get("notes") || "");
-
+  function sendCartToWhatsApp() {
+    if (!cartDetails.length) return;
     const itemLines = cartDetails.map(
       ({ product, variant, quantity }) =>
         `• ${quantity} × ${product.name} — ${variant.label} — ${currency.format(variant.price * quantity)}`,
     );
     const message = [
-      "✨ *NUEVO PEDIDO — IMPORTGLOW*",
-      "",
-      `*Cliente:* ${name}`,
-      `*WhatsApp:* ${customerWhatsapp}`,
-      email ? `*Email:* ${email}` : "",
-      `*Entrega:* ${delivery}`,
-      address ? `*Dirección:* ${address}` : "",
-      city ? `*Localidad:* ${city}` : "",
-      `*Forma de pago:* ${payment}`,
+      "Hola ImportGlow, quiero consultar por este pedido:",
       "",
       "*Productos:*",
       ...itemLines,
       "",
       `*Total estimado: ${currency.format(subtotal)}*`,
-      notes ? `\n*Observaciones:* ${notes}` : "",
+      "",
+      "¿Me confirman disponibilidad y coordinamos entrega y pago?",
     ]
-      .filter(Boolean)
       .join("\n");
 
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
   }
 
-  const hasOverlay = menuOpen || cartOpen || checkoutOpen || Boolean(selectedProduct);
+  function productWhatsAppUrl(product: Product, variantId?: string) {
+    const variant = product.variants.find((candidate) => candidate.id === variantId);
+    const selection = variant
+      ? `, variante ${variant.label} (${currency.format(variant.price)})`
+      : "";
+    const message = `Hola ImportGlow, quiero consultar por *${product.name}*${selection}. ¿Está disponible?`;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  }
+
+  const hasOverlay = menuOpen || cartOpen || Boolean(selectedProduct);
 
   useEffect(() => {
     if (!hasOverlay) return;
@@ -427,7 +411,13 @@ export default function Storefront({ products = sampleProducts }: { products?: P
                     <button className="product-title" onClick={() => showProduct(product)}>{product.name}</button>
                     <div className="product-card-footer">
                       <span>{startingPrice === null ? <strong>Sin stock</strong> : <>Desde <strong>{currency.format(startingPrice)}</strong></>}</span>
-                      <button onClick={() => showProduct(product)} aria-label={`Elegir variante de ${product.name}`}>+</button>
+                      <div className="product-card-actions">
+                        <a href={productWhatsAppUrl(product)} target="_blank" rel="noreferrer" aria-label={`Consultar por ${product.name} en WhatsApp`}>
+                          <WhatsAppIcon />
+                          <span>Consultar</span>
+                        </a>
+                        <button onClick={() => showProduct(product)} aria-label={`Elegir variante de ${product.name}`}>+</button>
+                      </div>
                     </div>
                   </div>
                 </article>
@@ -466,7 +456,7 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         <strong>WhatsApp</strong>
       </a>
 
-      {hasOverlay && <button className="page-overlay" aria-label="Cerrar" onClick={() => { setMenuOpen(false); setCartOpen(false); setCheckoutOpen(false); setSelectedProduct(null); }} />}
+      {hasOverlay && <button className="page-overlay" aria-label="Cerrar" onClick={() => { setMenuOpen(false); setCartOpen(false); setSelectedProduct(null); }} />}
 
       <aside className={`side-panel menu-panel ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <div className="panel-heading">
@@ -509,8 +499,8 @@ export default function Storefront({ products = sampleProducts }: { products?: P
         <div className="cart-summary">
           <div><span>Subtotal</span><strong>{currency.format(subtotal)}</strong></div>
           <div className="cart-total"><span>Total estimado</span><strong>{currency.format(subtotal)}</strong></div>
-          <button className="primary-button full-button" onClick={beginCheckout} disabled={!cart.length}>Continuar pedido <span>→</span></button>
-          <small>El envío se coordina por WhatsApp.</small>
+          <button className="primary-button full-button" onClick={sendCartToWhatsApp} disabled={!cart.length}>Pedir por WhatsApp <span>↗</span></button>
+          <small>Confirmamos disponibilidad, pago y entrega por WhatsApp.</small>
         </div>
       </aside>
 
@@ -541,34 +531,12 @@ export default function Storefront({ products = sampleProducts }: { products?: P
             <button className="primary-button full-button detail-add" disabled={!selectedVariant} onClick={() => addToCart(selectedProduct, selectedVariant)}>
               {selectedVariant ? "Agregar al pedido" : "Elegí una opción"} <span>＋</span>
             </button>
+            <a className="detail-whatsapp" href={productWhatsAppUrl(selectedProduct, selectedVariant)} target="_blank" rel="noreferrer">
+              <WhatsAppIcon />
+              <span>{selectedVariant ? "Consultar esta opción" : "Consultar este producto"}</span>
+            </a>
             <small className="age-note">Producto de muestra. Vapers: venta exclusiva para mayores de 18 años.</small>
           </div>
-        </section>
-      )}
-
-      {checkoutOpen && (
-        <section className="modal checkout-modal" role="dialog" aria-modal="true" aria-label="Datos del pedido">
-          <button className="close-button floating-close" onClick={() => setCheckoutOpen(false)} aria-label="Cerrar formulario">×</button>
-          <div className="checkout-heading"><p className="kicker">FINALIZAR</p><h2>Datos del pedido</h2><p>Completá tus datos y te llevamos a WhatsApp con el mensaje listo.</p></div>
-          <form onSubmit={submitOrder}>
-            <div className="form-grid">
-              <label>Nombre y apellido<input name="name" required autoComplete="name" placeholder="Tu nombre" /></label>
-              <label>WhatsApp<input name="whatsapp" required inputMode="tel" autoComplete="tel" placeholder="Ej. 342 555 1234" /></label>
-              <label>Email <span>(opcional)</span><input name="email" type="email" autoComplete="email" placeholder="nombre@email.com" /></label>
-              <label>Forma de entrega<select value={delivery} onChange={(event) => setDelivery(event.target.value)}><option>Retiro coordinado</option><option>Envío en Santa Fe</option><option>Envío a otra localidad</option></select></label>
-              <label>Forma de pago<select name="payment"><option>Efectivo</option><option>Transferencia</option></select></label>
-              {delivery !== "Retiro coordinado" && <label>Localidad<input name="city" required placeholder="Tu localidad" /></label>}
-            </div>
-            {delivery !== "Retiro coordinado" && <label>Dirección de entrega<input name="address" required placeholder="Calle, número y referencias" /></label>}
-            <label>Observaciones <span>(opcional)</span><textarea name="notes" rows={3} placeholder="Horario, aclaraciones o consultas..." /></label>
-            <div className="order-total">
-              <div><span>Productos</span><strong>{currency.format(subtotal)}</strong></div>
-              <div><span>Envío</span><strong>A coordinar</strong></div>
-              <div><span>Total estimado</span><strong>{currency.format(subtotal)}</strong></div>
-            </div>
-            <button className="primary-button full-button" type="submit">Realizar pedido por WhatsApp <span>↗</span></button>
-            <small className="form-note">Al continuar, se abrirá WhatsApp con los datos y productos de tu pedido.</small>
-          </form>
         </section>
       )}
     </main>

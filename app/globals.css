@@ -338,6 +338,11 @@ footer small { grid-column: 1 / -1; padding-top: 25px; border-top: 1px solid #1c
 .detail-whatsapp .whatsapp-handset { fill: white; }
 .age-note { display: block; margin-top: 14px; color: #697580; line-height: 1.5; }
 
+@media (min-width: 1001px) and (max-width: 1200px) {
+  .product-card-actions > a { width: 44px; padding: 0; justify-content: center; }
+  .product-card-actions > a span { display: none; }
+}
+
 @media (max-width: 1000px) {
   .hero { grid-template-columns: 1fr; padding-top: 65px; }
   .hero-copy { text-align: center; }

@@ -29,7 +29,7 @@ type CartItem = {
   quantity: number;
 };
 
-const WHATSAPP_NUMBER = "5493425601607";
+const WHATSAPP_NUMBER = "5493424451284";
 
 const sampleProducts: Product[] = [
   {
